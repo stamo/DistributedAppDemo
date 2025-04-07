@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Cinema.HallManager.Data.Models
 {
     [Comment("Cinema Theatres")]
-    public class Cinema
+    public class CinemaTheatre
     {
         [Key]
         [Comment("Record identifier")]

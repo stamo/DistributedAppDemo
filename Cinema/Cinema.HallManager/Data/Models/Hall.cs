@@ -25,6 +25,6 @@ namespace Cinema.HallManager.Data.Models
         public int CinemaId { get; set; }
 
         [ForeignKey(nameof(CinemaId))]
-        public Cinema Cinema { get; set; } = null!;
+        public CinemaTheatre Cinema { get; set; } = null!;
     }
 }

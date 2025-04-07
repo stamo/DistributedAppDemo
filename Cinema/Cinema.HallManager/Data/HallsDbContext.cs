@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Cinema.HallManager.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.HallManager.Data
 {
@@ -9,5 +10,9 @@ namespace Cinema.HallManager.Data
         {
             
         }
+
+        public DbSet<CinemaTheatre> Cinemas { get; set; }
+
+        public DbSet<Hall> Halls { get; set; }
     }
 }
