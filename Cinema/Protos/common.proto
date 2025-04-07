@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServices.Common";
+
+package common;
+
+enum ResultCodes {
+	NOT_SET = 0;
+	OK = 200;
+	BAD_REQUEST = 400;
+	NOT_FOUND = 404;
+	INTERNAL_SERVER_ERROR = 500;
+}
+
+message ResultStatus {
+  ResultCodes code = 1;
+  optional string message = 2;
+}

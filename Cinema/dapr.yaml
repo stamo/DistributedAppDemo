@@ -14,6 +14,7 @@ apps:
 - appDirPath: Cinema.HallManager
   appID: cinema-hallmanager
   appPort: 5247
+  appProtocol: grpc
   command:
   - dotnet
   - run

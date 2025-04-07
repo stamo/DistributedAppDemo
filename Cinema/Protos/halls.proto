@@ -1,13 +1,16 @@
 syntax = "proto3";
 
+import "common.proto";
+
 option csharp_namespace = "GrpcServices.HallManager";
 
-// The request message containing the user's name.
-message HelloRequest {
+message CreateCinemaRequest {
   string name = 1;
+  string location = 2;
 }
 
 // The response message containing the greetings.
-message HelloReply {
-  string message = 1;
+message CreateCinemaReply {
+  common.ResultStatus result = 1;
+  int32 cinema_id = 2;
 }
