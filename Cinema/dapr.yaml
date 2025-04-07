@@ -1,0 +1,34 @@
+apps:
+- appDirPath: Cinema.OrderProcessor
+  appID: cinema-orderprocessor
+  appPort: 5289
+  command:
+  - dotnet
+  - run
+- appDirPath: Cinema.ApiGateway
+  appID: cinema-apigateway
+  appPort: 5062
+  command:
+  - dotnet
+  - run
+- appDirPath: Cinema.HallManager
+  appID: cinema-hallmanager
+  appPort: 5247
+  command:
+  - dotnet
+  - run
+  resourcesPaths:
+  - ./Components
+- appDirPath: Cinema.Catalog
+  appID: cinema-catalog
+  appPort: 5288
+  command:
+  - dotnet
+  - run
+- appDirPath: Cinema.Tickets
+  appID: cinema-tickets
+  appPort: 5065
+  command:
+  - dotnet
+  - run
+version: 1
