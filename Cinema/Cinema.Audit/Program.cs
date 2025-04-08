@@ -1,6 +1,23 @@
+using Cinema.Audit.Data;
 using Cinema.Audit.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.ConfigureDapr(
+    "cinemaauditconfig",
+    new List<string>() { "AuditConnectionString" },
+    "cinemaauditsecrets");
+
+builder.ConfigureOpenTelemetry();
+
+builder.Services.AddDbContext<AuditDbContext>(options =>
+    options.UseNpgsql(string.Format(
+        builder.Configuration["HallsConnectionString"] ?? "{0}{1}",
+        builder.Configuration["DbUser"] ?? "",
+        builder.Configuration["DbPassword"] ?? ""))
+    .UseSnakeCaseNamingConvention());
+builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 
 // Add services to the container.
 builder.Services.AddGrpc();
