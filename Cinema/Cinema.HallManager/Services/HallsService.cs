@@ -114,16 +114,15 @@ namespace Cinema.HallManager.Services
         private async Task<Any> CreateHall(InvokeRequest request)
         {
             CreateReply reply;
+            CreateHallRequest hallData = request.Data.Unpack<CreateHallRequest>();
 
             try
             {
-                CreateHallRequest cinemaData = request.Data.Unpack<CreateHallRequest>();
-
                 Hall hall = new Hall()
                 { 
-                    Name = cinemaData.Name,
-                    Seats = cinemaData.Seats,
-                    CinemaId = cinemaData.CinemaId,
+                    Name = hallData.Name,
+                    Seats = hallData.Seats,
+                    CinemaId = hallData.CinemaId,
                 };
 
                 await repo.AddAsync(hall);
@@ -151,17 +150,28 @@ namespace Cinema.HallManager.Services
                 };
             }
 
+            AuditMessage message = new AuditMessage()
+            {
+                SessionId = hallData.SessionId,
+                Message = $"New hall {hallData.Name} created in cinema with Id {hallData.CinemaId}",
+                ResultCode = (int)reply.Result.Code,
+            };
+
+            await client.PublishEventAsync(
+                PubSubConstants.Name,
+                PubSubConstants.AuditTopic,
+                message);
+
             return Any.Pack(reply);
         }
 
         private async Task<Any> CreateCinema(InvokeRequest request)
         {
             CreateReply reply;
+            CreateCinemaRequest cinemaData = request.Data.Unpack<CreateCinemaRequest>();
 
             try
             {
-                CreateCinemaRequest cinemaData = request.Data.Unpack<CreateCinemaRequest>();
-
                 CinemaTheatre cinema = new CinemaTheatre()
                 {
                     Name = cinemaData.Name,
@@ -192,6 +202,18 @@ namespace Cinema.HallManager.Services
                     }
                 };
             }
+
+            AuditMessage message = new AuditMessage()
+            {
+                SessionId = cinemaData.SessionId,
+                Message = $"Cinema {cinemaData.Name} was created in {cinemaData.Location}",
+                ResultCode = (int)reply.Result.Code,
+            };
+
+            await client.PublishEventAsync(
+                PubSubConstants.Name,
+                PubSubConstants.AuditTopic,
+                message);
 
             return Any.Pack(reply);
         }
