@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{6E0553
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GlobalComponents", "GlobalComponents", "{A4F6140C-199E-4150-A076-801E69DFBDD5}"
+	ProjectSection(SolutionItems) = preProject
+		GlobalComponents\pubsub.yml = GlobalComponents\pubsub.yml
+		GlobalComponents\statestore.yml = GlobalComponents\statestore.yml
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Audit", "Cinema.Audit\Cinema.Audit.csproj", "{7B567AF6-1DA7-42B4-A245-380A997115AA}"
 EndProject
@@ -56,14 +60,14 @@ Global
 		{2323A4C3-E019-4228-B948-907E312B1336}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2323A4C3-E019-4228-B948-907E312B1336}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2323A4C3-E019-4228-B948-907E312B1336}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Debug|Any CPU.ActiveCfg = Debug
-		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Debug|Any CPU.Build.0 = Debug
-		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Release|Any CPU.ActiveCfg = Release
-		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Release|Any CPU.Build.0 = Release
 		{7B567AF6-1DA7-42B4-A245-380A997115AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B567AF6-1DA7-42B4-A245-380A997115AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B567AF6-1DA7-42B4-A245-380A997115AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B567AF6-1DA7-42B4-A245-380A997115AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Debug|Any CPU.ActiveCfg = Debug
+		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Debug|Any CPU.Build.0 = Debug
+		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Release|Any CPU.ActiveCfg = Release
+		{D1786E2B-CAA0-4B2D-A974-9845EB9E420F}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
