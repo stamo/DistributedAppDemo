@@ -9,5 +9,8 @@ namespace Cinema.Infrastructure.Models
 
         [JsonPropertyName("sessionId")]
         public required string SessionId { get; set; }
+
+        [JsonPropertyName("resultCode")]
+        public int ResultCode { get; set; }
     }
 }

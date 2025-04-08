@@ -42,13 +42,10 @@ namespace Cinema.HallManager.Services
         private async Task<Any> GetCinema(InvokeRequest request)
         {
             GetCinemaReply reply;
+            GetCinemaRequest cinemaData = request.Data.Unpack<GetCinemaRequest>();
 
             try
             {
-                GetCinemaRequest cinemaData = request.Data.Unpack<GetCinemaRequest>();
-                var state = await client.GetStateAsync<RequestState>(StateConstants.StateStore, cinemaData.SessionId);
-                await client.DeleteStateAsync(StateConstants.StateStore, cinemaData.SessionId);
-                
                 var cinema = await repo.AllReadonly<CinemaTheatre>()
                     .Where(c => c.Id == cinemaData.CinemaId)
                     .Include(c => c.Halls)
@@ -98,6 +95,18 @@ namespace Cinema.HallManager.Services
                     }
                 };
             }
+
+            AuditMessage message = new AuditMessage()
+            {
+                SessionId = cinemaData.SessionId,
+                Message = $"Get information for cinema with Id {cinemaData.CinemaId}",
+                ResultCode = (int)reply.Result.Code,
+            };
+
+            await client.PublishEventAsync(
+                PubSubConstants.Name,
+                PubSubConstants.AuditTopic,
+                message);
 
             return Any.Pack(reply);
         }

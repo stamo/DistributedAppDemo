@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Cinema.Audit.Data.Models
 {
@@ -29,5 +30,11 @@ namespace Cinema.Audit.Data.Models
         [Required]
         [MaxLength(500)]
         public required string Message { get; set; }
+
+        [Required]
+        public int ResultCode { get; set; }
+
+        [Column(TypeName = "timestamptz")]
+        public DateTime Created { get; set; }
     }
 }

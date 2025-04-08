@@ -59,7 +59,8 @@ namespace Cinema.Audit.Services
                             IPAddress = state.IPAddress,
                             Method = state.Method,
                             TraceId = state.TraceId,
-                            Message = input.Message
+                            Message = input.Message,
+                            Created = DateTime.UtcNow
                         };
 
                         await repo.AddAsync(auditLog);
