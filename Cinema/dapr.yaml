@@ -38,9 +38,11 @@ apps:
 - appDirPath: Cinema.Audit
   appID: cinema-audit
   appPort: 5053
+  appProtocol: grpc
   command:
   - dotnet
   - run
   resourcesPaths:
+  - ./Components
   - ../GlobalComponents  
 version: 1

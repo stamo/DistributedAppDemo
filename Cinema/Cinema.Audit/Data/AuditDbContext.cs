@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Cinema.Audit.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Audit.Data
 {
@@ -8,5 +9,7 @@ namespace Cinema.Audit.Data
             : base(options)
         {
         }
+
+        public DbSet<AuditLog>  AuditLog { get; set; }
     }
 }
