@@ -11,6 +11,8 @@ apps:
   command:
   - dotnet
   - run
+  resourcesPaths:
+  - ./Components
 - appDirPath: Cinema.HallManager
   appID: cinema-hallmanager
   appPort: 5247

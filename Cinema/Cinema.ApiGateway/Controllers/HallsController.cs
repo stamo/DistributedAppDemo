@@ -1,13 +1,14 @@
 ﻿using Cinema.ApiGateway.Models;
 using Cinema.Infrastructure.Constants;
+using Cinema.Infrastructure.Models;
 using Dapr.Client;
 using GrpcServices.HallManager;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.ApiGateway.Controllers
 {
-    [ApiController]
-    public class HallsController(DaprClient client) : Controller
+    
+    public class HallsController() : BaseController
     {
         [HttpPost("createCinema")]
         public async Task<IActionResult> CreateCinema(CreateCinemaModel model)
@@ -19,7 +20,8 @@ namespace Cinema.ApiGateway.Controllers
                     new CreateCinemaRequest() 
                     { 
                         Name = model.Name, 
-                        Location = model.Location 
+                        Location = model.Location,
+                        SessionId = sessionId
                     }
                 );
 
@@ -42,7 +44,8 @@ namespace Cinema.ApiGateway.Controllers
                     {
                         Name = model.Name,
                         Seats = model.Seats,
-                        CinemaId = model.CinemaId
+                        CinemaId = model.CinemaId,
+                        SessionId = sessionId
                     }
                 );
 
@@ -63,7 +66,8 @@ namespace Cinema.ApiGateway.Controllers
                     HallsServiceConstants.GetCinema,
                     new GetCinemaRequest()
                     {
-                        CinemaId = id
+                        CinemaId = id,
+                        SessionId = sessionId
                     }
                 );
 

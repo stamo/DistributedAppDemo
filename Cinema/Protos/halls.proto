@@ -7,16 +7,19 @@ option csharp_namespace = "GrpcServices.HallManager";
 message CreateCinemaRequest {
   string name = 1;
   string location = 2;
+  string sessionId = 3;
 }
 
 message CreateHallRequest {
   string name = 1;
   int32 seats = 2;
   int32 cinema_id = 3;
+  string sessionId = 4;
 }
 
 message GetCinemaRequest {
   int32 cinema_id = 1;
+  string sessionId = 2;
 }
 
 message CreateReply {

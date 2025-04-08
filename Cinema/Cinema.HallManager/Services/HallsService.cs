@@ -1,7 +1,9 @@
 ﻿using Cinema.HallManager.Data;
 using Cinema.HallManager.Data.Models;
 using Cinema.Infrastructure.Constants;
+using Cinema.Infrastructure.Models;
 using Dapr.AppCallback.Autogen.Grpc.v1;
+using Dapr.Client;
 using Dapr.Client.Autogen.Grpc.v1;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
@@ -12,7 +14,8 @@ namespace Cinema.HallManager.Services
 {
     public class HallsService(
         IHallsRepository repo,
-        ILogger<HallsService> logger) : AppCallback.AppCallbackBase
+        ILogger<HallsService> logger,
+        DaprClient client) : AppCallback.AppCallbackBase
     {
         public override async Task<InvokeResponse> OnInvoke(InvokeRequest request, ServerCallContext context)
         {
@@ -43,7 +46,9 @@ namespace Cinema.HallManager.Services
             try
             {
                 GetCinemaRequest cinemaData = request.Data.Unpack<GetCinemaRequest>();
-
+                var state = await client.GetStateAsync<RequestState>(StateConstants.StateStore, cinemaData.SessionId);
+                await client.DeleteStateAsync(StateConstants.StateStore, cinemaData.SessionId);
+                
                 var cinema = await repo.AllReadonly<CinemaTheatre>()
                     .Where(c => c.Id == cinemaData.CinemaId)
                     .Include(c => c.Halls)
