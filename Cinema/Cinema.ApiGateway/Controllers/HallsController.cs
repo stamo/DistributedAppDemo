@@ -1,4 +1,5 @@
-﻿using Cinema.Infrastructure.Constants;
+﻿using Cinema.ApiGateway.Models;
+using Cinema.Infrastructure.Constants;
 using Dapr.Client;
 using GrpcServices.HallManager;
 using Microsoft.AspNetCore.Mvc;
@@ -9,22 +10,81 @@ namespace Cinema.ApiGateway.Controllers
     public class HallsController(DaprClient client) : Controller
     {
         [HttpPost("createCinema")]
-        public async Task<IActionResult> CreateCinema(string name, string location)
+        public async Task<IActionResult> CreateCinema(CreateCinemaModel model)
         {
             var responce = await client
-                .InvokeMethodGrpcAsync<CreateCinemaRequest, CreateCinemaReply>(
+                .InvokeMethodGrpcAsync<CreateCinemaRequest, CreateReply>(
                     HallsServiceConstants.AppId,
                     HallsServiceConstants.CreateCinema,
                     new CreateCinemaRequest() 
                     { 
-                        Name = name, 
-                        Location = location 
+                        Name = model.Name, 
+                        Location = model.Location 
                     }
                 );
 
             if (responce.Result.Code == GrpcServices.Common.ResultCodes.Ok)
             {
-                return Ok(responce.CinemaId);
+                return Ok(responce.Id);
+            }
+
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        [HttpPost("createHall")]
+        public async Task<IActionResult> CreateHall(CreateHallModel model)
+        {
+            var responce = await client
+                .InvokeMethodGrpcAsync<CreateHallRequest, CreateReply>(
+                    HallsServiceConstants.AppId,
+                    HallsServiceConstants.CreateHall,
+                    new CreateHallRequest()
+                    {
+                        Name = model.Name,
+                        Seats = model.Seats,
+                        CinemaId = model.CinemaId
+                    }
+                );
+
+            if (responce.Result.Code == GrpcServices.Common.ResultCodes.Ok)
+            {
+                return Ok(responce.Id);
+            }
+
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        [HttpGet("GetCinema")]
+        public async Task<IActionResult> GetCinema(int id)
+        {
+            var responce = await client
+                .InvokeMethodGrpcAsync<GetCinemaRequest, GetCinemaReply>(
+                    HallsServiceConstants.AppId,
+                    HallsServiceConstants.GetCinema,
+                    new GetCinemaRequest()
+                    {
+                        CinemaId = id
+                    }
+                );
+
+            if (responce.Result.Code == GrpcServices.Common.ResultCodes.Ok)
+            {
+                var result = new CinemaInfoModel()
+                {
+                    Id = responce.Id,
+                    Name = responce.Name,
+                    Location = responce.Location,
+                    Halls = responce.Halls
+                        .Select(h => new HallInfoModel()
+                        {
+                            Id = h.Id,
+                            Name = h.Name,
+                            Seats = h.Seats
+                        })
+                        .ToList()
+                };
+
+                return Ok(result);
             }
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);

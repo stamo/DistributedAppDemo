@@ -6,6 +6,7 @@ using Dapr.Client.Autogen.Grpc.v1;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcServices.HallManager;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.HallManager.Services
 {
@@ -22,10 +23,10 @@ namespace Cinema.HallManager.Services
                 case HallsServiceConstants.CreateCinema:
                     response.Data = await CreateCinema(request); 
                     break;
-                case "CreateHall":
+                case HallsServiceConstants.CreateHall:
                     response.Data = await CreateHall(request);
                     break;
-                case "GetCinema":
+                case HallsServiceConstants.GetCinema:
                     response.Data = await GetCinema(request);
                     break;
                 default:
@@ -37,17 +38,111 @@ namespace Cinema.HallManager.Services
 
         private async Task<Any> GetCinema(InvokeRequest request)
         {
-            throw new NotImplementedException();
+            GetCinemaReply reply;
+
+            try
+            {
+                GetCinemaRequest cinemaData = request.Data.Unpack<GetCinemaRequest>();
+
+                var cinema = await repo.AllReadonly<CinemaTheatre>()
+                    .Where(c => c.Id == cinemaData.CinemaId)
+                    .Include(c => c.Halls)
+                    .FirstOrDefaultAsync();
+
+                if (cinema != null)
+                {
+                    reply = new GetCinemaReply()
+                    {
+                        Result = new GrpcServices.Common.ResultStatus()
+                        {
+                            Code = GrpcServices.Common.ResultCodes.Ok
+                        },
+                        Id = cinema.Id,
+                        Location = cinema.City,
+                        Name = cinema.Name
+                    };
+
+                    reply.Halls.AddRange(cinema.Halls
+                        .Select(h => new HallInfo()
+                        {
+                            Id = h.Id,
+                            Name = h.Name,
+                            Seats = h.Seats
+                        }));
+                }
+                else
+                {
+                    reply = new GetCinemaReply()
+                    {
+                        Result = new GrpcServices.Common.ResultStatus()
+                        {
+                            Code = GrpcServices.Common.ResultCodes.NotFound
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "CreateHall");
+                reply = new GetCinemaReply()
+                {
+                    Result = new GrpcServices.Common.ResultStatus()
+                    {
+                        Code = GrpcServices.Common.ResultCodes.InternalServerError,
+                        Message = ex.Message
+                    }
+                };
+            }
+
+            return Any.Pack(reply);
         }
 
         private async Task<Any> CreateHall(InvokeRequest request)
         {
-            throw new NotImplementedException();
+            CreateReply reply;
+
+            try
+            {
+                CreateHallRequest cinemaData = request.Data.Unpack<CreateHallRequest>();
+
+                Hall hall = new Hall()
+                { 
+                    Name = cinemaData.Name,
+                    Seats = cinemaData.Seats,
+                    CinemaId = cinemaData.CinemaId,
+                };
+
+                await repo.AddAsync(hall);
+                await repo.SaveChangesAsync();
+                reply = new CreateReply()
+                {
+                    Id = hall.Id,
+                    Result = new GrpcServices.Common.ResultStatus()
+                    {
+                        Code = GrpcServices.Common.ResultCodes.Ok
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "CreateHall");
+                reply = new CreateReply()
+                {
+                    Id = 0,
+                    Result = new GrpcServices.Common.ResultStatus()
+                    {
+                        Code = GrpcServices.Common.ResultCodes.InternalServerError,
+                        Message = ex.Message
+                    }
+                };
+            }
+
+            return Any.Pack(reply);
         }
 
         private async Task<Any> CreateCinema(InvokeRequest request)
         {
-            CreateCinemaReply reply;
+            CreateReply reply;
 
             try
             {
@@ -61,9 +156,9 @@ namespace Cinema.HallManager.Services
 
                 await repo.AddAsync(cinema);
                 await repo.SaveChangesAsync();
-                reply = new CreateCinemaReply()
+                reply = new CreateReply()
                 {
-                    CinemaId = cinema.Id,
+                    Id = cinema.Id,
                     Result = new GrpcServices.Common.ResultStatus()
                     {
                         Code = GrpcServices.Common.ResultCodes.Ok
@@ -73,9 +168,9 @@ namespace Cinema.HallManager.Services
             catch (Exception ex)
             {
                 logger.LogError(ex, "CreateCinema");
-                reply = new CreateCinemaReply()
+                reply = new CreateReply()
                 {
-                    CinemaId = 0,
+                    Id = 0,
                     Result = new GrpcServices.Common.ResultStatus()
                     {
                         Code = GrpcServices.Common.ResultCodes.InternalServerError,

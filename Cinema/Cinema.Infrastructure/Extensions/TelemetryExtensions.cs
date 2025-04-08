@@ -23,9 +23,10 @@ namespace Microsoft.Extensions.Hosting
                 })
                 .WithTracing(tracing =>
                 {
-                    tracing.AddZipkinExporter()
+                    tracing
                         .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation();
+                        .AddHttpClientInstrumentation()
+                        .AddZipkinExporter();
                 });
 
 

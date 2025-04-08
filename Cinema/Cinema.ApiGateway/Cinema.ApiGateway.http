@@ -1,6 +1,12 @@
-@Cinema.ApiGateway_HostAddress = http://localhost:5062
+﻿@Cinema.ApiGateway_HostAddress = http://localhost:5062
 
-GET {{Cinema.ApiGateway_HostAddress}}/weatherforecast/
+POST {{Cinema.ApiGateway_HostAddress}}/createCinema/
 Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Арена",
+  "location": "Пловдив"
+}
 
 ###

@@ -9,8 +9,31 @@ message CreateCinemaRequest {
   string location = 2;
 }
 
-// The response message containing the greetings.
-message CreateCinemaReply {
+message CreateHallRequest {
+  string name = 1;
+  int32 seats = 2;
+  int32 cinema_id = 3;
+}
+
+message GetCinemaRequest {
+  int32 cinema_id = 1;
+}
+
+message CreateReply {
   common.ResultStatus result = 1;
-  int32 cinema_id = 2;
+  int32 id = 2;
+}
+
+message HallInfo {
+  int32 id = 1;
+  string name = 2;
+  int32 seats = 3;
+}
+
+message GetCinemaReply {
+  common.ResultStatus result = 1;
+  int32 id = 2;
+  string name = 3;
+  string location = 4;
+  repeated HallInfo halls = 5;
 }
