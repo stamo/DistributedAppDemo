@@ -35,4 +35,12 @@ apps:
   command:
   - dotnet
   - run
+- appDirPath: Cinema.Audit
+  appID: cinema-audit
+  appPort: 5053
+  command:
+  - dotnet
+  - run
+  resourcesPaths:
+  - ../GlobalComponents  
 version: 1

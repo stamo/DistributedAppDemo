@@ -11,7 +11,7 @@ namespace Cinema.HallManager.Data
                 .AddUserSecrets<Program>()
                 .Build();
 
-            var connectionString = configuration.GetConnectionString("HallsDbConnectionConnection");
+            var connectionString = configuration.GetConnectionString("HallsDbConnection");
 
             var builder = new DbContextOptionsBuilder<HallsDbContext>();
 
