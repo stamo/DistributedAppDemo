@@ -13,7 +13,7 @@ builder.ConfigureOpenTelemetry();
 
 builder.Services.AddDbContext<AuditDbContext>(options =>
     options.UseNpgsql(string.Format(
-        builder.Configuration["HallsConnectionString"] ?? "{0}{1}",
+        builder.Configuration["AuditConnectionString"] ?? "{0}{1}",
         builder.Configuration["DbUser"] ?? "",
         builder.Configuration["DbPassword"] ?? ""))
     .UseSnakeCaseNamingConvention());
